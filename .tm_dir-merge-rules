@@ -1,0 +1,21 @@
+# place this file in $src
+# specify rsync filter rules to be filtered as dir-merge (:)
+
+- lost+found
+
+- Debug*
+- debug*
+- Release*
+- release*
+
+- *PlayOnLinux*
+- Downloads
+- Pictures/Photo/Wedding_day/
+- Programs
+- Videos/drift_03_02_2018
+- Virtus*
+- projectsDSP/keystone-stc/
+- projectsDSP/u-boot-tci6614/
+
++ Documents/ti/
+- ti/

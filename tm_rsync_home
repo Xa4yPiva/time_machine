@@ -1,0 +1,20 @@
+#!/bin/sh
+date=$(date "+%Y-%m-%d-%H%M%S")
+day=$(date "+%Y-%m-%d")
+time=$(date "+%H-%M-%S")
+echo $date
+src='/home/xa4ypiva'
+dst_drive='/mnt/mSATA'
+dst_dir='/data/backups/home'
+dst=$dst_drive$dst_dir
+rules='.tm_dir-merge-rules'
+
+rsync -ax --progress --delete --link-dest=../latest --filter="dir-merge $rules" \
+    $src $dst/processing-$date
+cd $dst
+mkdir $day
+mv processing-$date $day/$time
+rm -f latest
+ln -s $day/$time latest
+
+echo "done! `date`"

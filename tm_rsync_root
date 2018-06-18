@@ -1,0 +1,19 @@
+#!/bin/sh
+date=$(date "+%Y-%m-%d-%H%M%S")
+day=$(date "+%Y-%m-%d")
+time=$(date "+%H-%M-%S")
+dist=$(lsb_release -is)'-'$(lsb_release -rs)
+kernel=$(uname -r)
+src='/'
+dst_drive='/mnt/mSATA'
+dst_dir='/data/backups/root'
+dst=$dst_drive$dst_dir
+excl_pattern='home/'
+folderName=$time'_'$dist'_'$kernel
+
+rsync -ax --progress --delete --link-dest=../latest --exclude=$excl_pattern $src $dst/processing-$date
+cd $dst
+mkdir -p $day
+mv processing-$date $day/$folderName
+rm -f latest
+ln -s $day/$folderName latest
