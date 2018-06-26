@@ -1,46 +1,14 @@
 #!/bin/bash
 
 function FindOldFolders() {
-#	folders=()
-    echo $(date -d "$daysToRemain days ago" +%Y-%m-%d)
-	dirLatest=$(readlink $1/latest)
-	echo $dirLatest
-	dateLatest=${dirLatest:0:10}
-	echo $dateLatest
-	echo $1/$dateLatest
-	echo ''
-	dateMax='@0'
-#    for dir in $(find $1 -maxdepth 1 -type d ! -wholename "$1" ! -wholename "$1/$dateLatest") ; do
-#        dateTillDay=${dir:5:14}
-#		if [[ $(date -d "$dateMax" +%s) -lt $(date -d "$dateTillDay" +%s) ]] ; then
-#			dateMax=$dateTillDay
-#		fi
-#		
-#		echo $dir
-#		#echo $dateTillDay
-#       if [[ $(date -d "$dateTillDay" +%s) -lt $(date -d "$daysToRemain days ago" +%s) ]] ; then
-#			#rm -rf $dir
-#            #echo $dir
-#            #echo $(date -d "$dateTillDay" +%Y-%m-%d)
-#			folders+=($dir)
-#       fi
-#    done
-
 	folders=($(ls $1 | sort -V | grep '[0-9-]'))
-	num=${#folders[@]}
-	echo $num
-	if [[ $num -gt 7 ]] ; then
-		dirsRemoveNum=$(($num-7))
-	else
-		dirsRemoveNum=0
-	fi
-	echo $dirsRemoveNum
-	echo ''
+	folders=(${folders[@]/#/"$1/"})
+	dirsNum=${#folders[@]}
+	[[ $dirsNum -gt $dirsRemainNum ]] && dirsRemoveNum=$(($dirsNum - $dirsRemainNum)) || dirsRemoveNum=0
 	echo ${folders[@]:0:$dirsRemoveNum}
 }
 
 dst='/mnt/mSATA/data/backups'
-daysToRemain=7
-cd $dst
-FindOldFolders 'home'
-FindOldFolders 'root'
+dirsRemainNum=7
+rm -rf $(FindOldFolders $dst/home)
+rm -rf $(FindOldFolders $dst/root)
